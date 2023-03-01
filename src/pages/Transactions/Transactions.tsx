@@ -1,33 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Header } from "../../components/Header/Header";
 import { Summary } from "../../components/Summary/Summary";
+import { TransactionsContext } from "../../contexts/TransactionsContext";
 import { SearchForm } from "./components/SearchForm/SearchForm";
 import { PriceHighlight, TransactionsContainer, TransactionsTable } from "./styles";
 
 
-interface Transaction {
-    id: number,
-    description: string,
-    type: "income" | "outcome",
-    category: string,
-    price: number,
-    createdAt: string
-}
+
 
 
 export function Transactions() {
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
-
-    async function loadingTransactions() {
-        const response = await fetch("http://localhost:3000/transactions")
-        const data = await response.json();
-
-        setTransactions(data);
-    }
-
-    useEffect(() => {
-        loadingTransactions();
-    }, []);
+    const { transactions } = useContext(TransactionsContext);
 
     return (
         <div>
@@ -43,7 +26,7 @@ export function Transactions() {
                                 <tr key={transaction.id}>
                                     <td width="50%">{transaction.description}</td>
                                     <td>
-                                        <PriceHighlight variant={transaction.type}>R$ {transaction.price}</PriceHighlight>
+                                        <PriceHighlight variant={transaction.type}>{transaction.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</PriceHighlight>
                                     </td>
                                     <td>{transaction.category}</td>
                                     <td>{transaction.createdAt}</td>
