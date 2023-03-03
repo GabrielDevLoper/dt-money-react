@@ -43,25 +43,28 @@ export function TransactionsProvider({ children }: TransactionProviderProps) {
     })
 
     setTransactions(data)
-  }, []);
+  }, [])
 
-  const createTransaction = useCallback(async (data: CreateTransactionInputs) => {
-    const { category, description, price, type } = data
+  const createTransaction = useCallback(
+    async (data: CreateTransactionInputs) => {
+      const { category, description, price, type } = data
 
-    const response = await api.post('/transactions', {
-      description,
-      category,
-      price,
-      type,
-      createdAt: new Date(),
-    })
+      const response = await api.post('/transactions', {
+        description,
+        category,
+        price,
+        type,
+        createdAt: new Date(),
+      })
 
-    setTransactions((state) => [response.data, ...state])
-  }, []);
+      setTransactions((state) => [response.data, ...state])
+    },
+    [],
+  )
 
   useEffect(() => {
     fetchTransactions()
-  }, [])
+  }, [fetchTransactions])
 
   return (
     <TransactionsContext.Provider
